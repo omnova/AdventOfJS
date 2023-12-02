@@ -1,42 +1,33 @@
 function part1(input) {
-  let gameId = 0;
+  const maxAmounts = {'red': 12, 'green': 13, 'blue': 14};  
 
-  return input.split("\r\n").reduce((result, game) => {    
-    gameId++;
+  return input.split("\r\n").reduce((result, game, gameId) => {    
 
-    const hands = game.split(': ')[1].split(/[;,]/)
+    for (const hand of game.split(': ')[1].split(/[;,]/)) {
+      const amount = hand.trim().split(' ')[0];
+      const color = hand.trim().split(' ')[1];
 
-    for (let i = 0; i < hands.length; i++) {
-      const amount = hands[i].trim().split(' ')[0];
-      const color = hands[i].trim().split(' ')[1];
-
-      if ((color == 'red' && amount > 12) || (color == 'green' && amount > 13) || (color == 'blue' && amount > 14))
+      if (amount > maxAmounts[color])
         return result;
     }
 
-    return result += gameId;
+    return result += gameId + 1;
   }, 0);
 }
 
 
 function part2(input) {
   return input.split("\r\n").reduce((result, game) => {    
-    
-    const valueMap = new Map();
-    valueMap.set('red', 0);
-    valueMap.set('green', 0);
-    valueMap.set('blue', 0);
-    
-    const hands = game.split(': ')[1].split(/[;,]/)
+    const requiredAmounts = {'red': 0, 'green': 0, 'blue': 0};    
 
-    for (let i = 0; i < hands.length; i++) {
-      const amount = hands[i].trim().split(' ')[0];
-      const color = hands[i].trim().split(' ')[1];
+    for (const hand of game.split(': ')[1].split(/[;,]/)) {
+      const amount = hand.trim().split(' ')[0];
+      const color = hand.trim().split(' ')[1];
 
-      valueMap.set(color, Math.max(valueMap.get(color), amount));
+      requiredAmounts[color] = Math.max(requiredAmounts[color], amount);
     }
 
-    return result + (valueMap.get('red') * valueMap.get('green') * valueMap.get('blue'));
+    return result + (requiredAmounts['red'] * requiredAmounts['green'] * requiredAmounts['blue']);
   }, 0);
 }
 
